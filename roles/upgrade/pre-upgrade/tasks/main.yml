@@ -88,6 +88,21 @@
       delay: "{{ drain_fallback_retry_delay_seconds }}"
       changed_when: drain_fallback_result.rc == 0
 
+    - name: Delete node
+      command: >-
+        {{ kubectl }} delete node
+        --force
+        --grace-period {{ delete_grace_period }}
+        --timeout {{ delete_timeout }}
+        {{ kube_override_hostname | default(inventory_hostname) }}
+      when: delete_nodes
+      register: result
+      failed_when:
+        - result.rc != 0
+      until: result.rc == 0
+      retries: "{{ delete_retries }}"
+      delay: "{{ delete_retry_delay_seconds }}"
+
   rescue:
     - name: Set node back to schedulable
       command: "{{ kubectl }} uncordon {{ kube_override_hostname | default(inventory_hostname) }}"

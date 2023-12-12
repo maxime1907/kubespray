@@ -18,3 +18,9 @@ upgrade_node_fail_if_drain_fails: true
 
 upgrade_node_confirm: false
 upgrade_node_pause_seconds: 0
+
+delete_nodes: false
+delete_grace_period: 300
+delete_timeout: 360s
+delete_retries: 3
+delete_retry_delay_seconds: 10
